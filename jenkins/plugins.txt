@@ -1,0 +1,37 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Jenkins plugins required for the Stooge pipeline
+#
+# Format understood by jenkins-plugin-cli:
+#   plugin-id:version   — pin to exact version
+#   plugin-id:latest    — always resolve the newest compatible release
+#
+# After adding or changing a plugin here, rebuild the image:
+#   make jenkins-start   (docker compose up --build)
+# ─────────────────────────────────────────────────────────────────────────────
+
+# ── Pipeline engine ──────────────────────────────────────────────────────────
+workflow-aggregator:latest        # Declarative + Scripted Pipeline support
+pipeline-stage-view:latest        # Stage view in the Blue Ocean-style UI
+
+# ── SCM ──────────────────────────────────────────────────────────────────────
+git:latest                        # Git SCM integration
+
+# ── Test result publishing ───────────────────────────────────────────────────
+junit:latest                      # Publish JUnit XML; powers trend graphs
+
+# ── Console / UX ─────────────────────────────────────────────────────────────
+ansicolor:latest                  # Render ANSI colour codes (xcbeautify output)
+timestamper:latest                # Prefix every console line with a timestamp
+
+# ── Agent connectivity ───────────────────────────────────────────────────────
+# JNLP (inbound) agents require no extra plugin — it's built into Jenkins core.
+# Uncomment the line below only if you prefer SSH-launched agents instead.
+# ssh-build-agents:latest
+
+# ── Credentials / secrets ────────────────────────────────────────────────────
+credentials:latest
+credentials-binding:latest        # withCredentials() DSL step
+
+# ── Build hygiene ─────────────────────────────────────────────────────────────
+build-timeout:latest              # Complements pipeline timeout() option
+ws-cleanup:latest                 # Powers the cleanWs() step in post { always }

@@ -1,0 +1,47 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Stooge CI — Jenkins controller
+#
+# This runs the Jenkins *server* only.  All actual Xcode / iOS Simulator work
+# happens on the Mac agent that connects back on port 50000 (JNLP).
+#
+# Quick start:
+#   make jenkins-start        # build image + start container
+#   make jenkins-password     # print the one-time admin password
+#   open http://localhost:8080
+#   make connect-agent JENKINS_SECRET=<secret from the node page>
+# ─────────────────────────────────────────────────────────────────────────────
+
+services:
+
+  jenkins:
+    build:
+      context:    ./jenkins
+      dockerfile: Dockerfile
+    container_name: stooge-jenkins
+    restart: unless-stopped
+
+    ports:
+      - "8080:8080"    # Web UI + REST API
+      - "50000:50000"  # JNLP inbound agent connections
+
+    volumes:
+      # Jenkins home — survives container rebuilds
+      - jenkins-home:/var/jenkins_home
+
+    environment:
+      # Give the JVM enough heap for a comfortable build controller
+      JAVA_OPTS: >-
+        -Xmx512m
+        -Dhudson.model.DirectoryBrowserSupport.CSP=
+        -Dhudson.plugins.git.GitSCM.ALLOW_LOCAL_CHECKOUT=true
+
+    healthcheck:
+      test:     ["CMD-SHELL", "curl -sf http://localhost:8080/login || exit 1"]
+      interval: 30s
+      timeout:  10s
+      retries:  5
+      start_period: 60s
+
+volumes:
+  jenkins-home:
+    name: stooge-jenkins-home
