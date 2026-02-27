@@ -47,13 +47,13 @@ final class StoogeUITests: XCTestCase {
     // MARK: - Posts List
 
     func testPostsListLoads() {
-        let list = app.collectionViews["posts-list"]
+        let list = app.collectionViews[StoogeA11y.Posts.list]
         XCTAssertTrue(list.waitForExistence(timeout: 15))
         XCTAssertGreaterThan(list.cells.count, 0)
     }
 
     func testPostsListContainsExpectedFirstRow() {
-        let list = app.collectionViews["posts-list"]
+        let list = app.collectionViews[StoogeA11y.Posts.list]
         XCTAssertTrue(list.waitForExistence(timeout: 15))
 
         let firstCell = list.cells.element(boundBy: 0)
@@ -62,28 +62,26 @@ final class StoogeUITests: XCTestCase {
     }
 
     func testPostsListCanScrollDown() {
-        let list = app.collectionViews["posts-list"]
+        let list = app.collectionViews[StoogeA11y.Posts.list]
         XCTAssertTrue(list.waitForExistence(timeout: 15))
         list.swipeUp()
         XCTAssertTrue(list.cells.count > 0)
     }
 
     func testPostsListCanPullToRefresh() {
-        let list = app.collectionViews["posts-list"]
+        let list = app.collectionViews[StoogeA11y.Posts.list]
         XCTAssertTrue(list.waitForExistence(timeout: 15))
 
-        // Pull to refresh
         let firstCell = list.cells.element(boundBy: 0)
         firstCell.swipeDown()
 
-        // List should still be present after refresh
         XCTAssertTrue(list.waitForExistence(timeout: 15))
     }
 
     // MARK: - Post Detail
 
     func testTappingPostNavigatesToDetail() {
-        let list = app.collectionViews["posts-list"]
+        let list = app.collectionViews[StoogeA11y.Posts.list]
         XCTAssertTrue(list.waitForExistence(timeout: 15))
 
         list.cells.element(boundBy: 0).tap()
@@ -92,40 +90,40 @@ final class StoogeUITests: XCTestCase {
     }
 
     func testPostDetailShowsTitle() {
-        let list = app.collectionViews["posts-list"]
+        let list = app.collectionViews[StoogeA11y.Posts.list]
         XCTAssertTrue(list.waitForExistence(timeout: 15))
         list.cells.element(boundBy: 0).tap()
 
-        let title = app.staticTexts["post-title"]
+        let title = app.staticTexts[StoogeA11y.Posts.Detail.title]
         XCTAssertTrue(title.waitForExistence(timeout: 10))
         XCTAssertFalse(title.label.isEmpty)
     }
 
     func testPostDetailShowsBody() {
-        let list = app.collectionViews["posts-list"]
+        let list = app.collectionViews[StoogeA11y.Posts.list]
         XCTAssertTrue(list.waitForExistence(timeout: 15))
         list.cells.element(boundBy: 0).tap()
 
-        let body = app.staticTexts["post-body"]
+        let body = app.staticTexts[StoogeA11y.Posts.Detail.body]
         XCTAssertTrue(body.waitForExistence(timeout: 10))
         XCTAssertFalse(body.label.isEmpty)
     }
 
     func testPostDetailShowsComments() {
-        let list = app.collectionViews["posts-list"]
+        let list = app.collectionViews[StoogeA11y.Posts.list]
         XCTAssertTrue(list.waitForExistence(timeout: 15))
         list.cells.element(boundBy: 0).tap()
 
-        let comments = app.otherElements["comments-list"]
+        let comments = app.otherElements[StoogeA11y.Posts.Detail.commentsList]
         XCTAssertTrue(comments.waitForExistence(timeout: 10))
     }
 
     func testPostDetailAuthorLinkNavigatesToUserProfile() {
-        let list = app.collectionViews["posts-list"]
+        let list = app.collectionViews[StoogeA11y.Posts.list]
         XCTAssertTrue(list.waitForExistence(timeout: 15))
         list.cells.element(boundBy: 0).tap()
 
-        let authorLink = app.buttons["post-author-link"]
+        let authorLink = app.buttons[StoogeA11y.Posts.Detail.authorLink]
         XCTAssertTrue(authorLink.waitForExistence(timeout: 10))
         authorLink.tap()
 
@@ -133,7 +131,7 @@ final class StoogeUITests: XCTestCase {
     }
 
     func testBackNavigationFromPostDetail() {
-        let list = app.collectionViews["posts-list"]
+        let list = app.collectionViews[StoogeA11y.Posts.list]
         XCTAssertTrue(list.waitForExistence(timeout: 15))
         list.cells.element(boundBy: 0).tap()
 
@@ -148,7 +146,7 @@ final class StoogeUITests: XCTestCase {
     func testUsersListLoads() {
         app.tabBars.buttons["People"].tap()
 
-        let list = app.collectionViews["users-list"]
+        let list = app.collectionViews[StoogeA11y.Users.list]
         XCTAssertTrue(list.waitForExistence(timeout: 15))
         XCTAssertGreaterThan(list.cells.count, 0)
     }
@@ -156,7 +154,7 @@ final class StoogeUITests: XCTestCase {
     func testTappingUserNavigatesToProfile() {
         app.tabBars.buttons["People"].tap()
 
-        let list = app.collectionViews["users-list"]
+        let list = app.collectionViews[StoogeA11y.Users.list]
         XCTAssertTrue(list.waitForExistence(timeout: 15))
         list.cells.element(boundBy: 0).tap()
 
@@ -166,11 +164,11 @@ final class StoogeUITests: XCTestCase {
     func testUserDetailShowsName() {
         app.tabBars.buttons["People"].tap()
 
-        let list = app.collectionViews["users-list"]
+        let list = app.collectionViews[StoogeA11y.Users.list]
         XCTAssertTrue(list.waitForExistence(timeout: 15))
         list.cells.element(boundBy: 0).tap()
 
-        let name = app.staticTexts["user-name"]
+        let name = app.staticTexts[StoogeA11y.Users.Detail.name]
         XCTAssertTrue(name.waitForExistence(timeout: 10))
         XCTAssertFalse(name.label.isEmpty)
     }
@@ -178,11 +176,11 @@ final class StoogeUITests: XCTestCase {
     func testUserDetailShowsUsername() {
         app.tabBars.buttons["People"].tap()
 
-        let list = app.collectionViews["users-list"]
+        let list = app.collectionViews[StoogeA11y.Users.list]
         XCTAssertTrue(list.waitForExistence(timeout: 15))
         list.cells.element(boundBy: 0).tap()
 
-        let username = app.staticTexts["user-username"]
+        let username = app.staticTexts[StoogeA11y.Users.Detail.username]
         XCTAssertTrue(username.waitForExistence(timeout: 10))
         XCTAssertTrue(username.label.hasPrefix("@"))
     }
@@ -190,15 +188,18 @@ final class StoogeUITests: XCTestCase {
     func testUserDetailPostsNavigateToPostDetail() {
         app.tabBars.buttons["People"].tap()
 
-        let list = app.collectionViews["users-list"]
+        let list = app.collectionViews[StoogeA11y.Users.list]
         XCTAssertTrue(list.waitForExistence(timeout: 15))
         list.cells.element(boundBy: 0).tap()
 
-        // Wait for user detail to load, then tap first post
-        let userDetail = app.collectionViews["user-detail-1"]
+        let userDetail = app.collectionViews.matching(
+            NSPredicate(format: "identifier BEGINSWITH '\(StoogeA11y.Users.Detail.containerPrefix)'")
+        ).firstMatch
         XCTAssertTrue(userDetail.waitForExistence(timeout: 10))
 
-        let firstPostRow = app.buttons.matching(identifier: NSPredicate(format: "identifier BEGINSWITH 'user-post-row-'")).firstMatch
+        let firstPostRow = app.buttons.matching(
+            NSPredicate(format: "identifier BEGINSWITH '\(StoogeA11y.Users.Detail.postRowPrefix)'")
+        ).firstMatch
         if firstPostRow.waitForExistence(timeout: 5) {
             firstPostRow.tap()
             XCTAssertTrue(app.navigationBars["Post"].waitForExistence(timeout: 5))
@@ -210,7 +211,7 @@ final class StoogeUITests: XCTestCase {
     func testAlbumsListLoads() {
         app.tabBars.buttons["Albums"].tap()
 
-        let list = app.collectionViews["albums-list"]
+        let list = app.collectionViews[StoogeA11y.Albums.list]
         XCTAssertTrue(list.waitForExistence(timeout: 15))
         XCTAssertGreaterThan(list.cells.count, 0)
     }
@@ -218,32 +219,26 @@ final class StoogeUITests: XCTestCase {
     func testTappingAlbumNavigatesToPhotoGrid() {
         app.tabBars.buttons["Albums"].tap()
 
-        let list = app.collectionViews["albums-list"]
+        let list = app.collectionViews[StoogeA11y.Albums.list]
         XCTAssertTrue(list.waitForExistence(timeout: 15))
         list.cells.element(boundBy: 0).tap()
 
-        // The navigation title changes to the album name
-        // and the photo grid appears
-        let grid = app.scrollViews.matching(identifier: NSPredicate(format: "identifier BEGINSWITH 'album-photos-grid-'")).firstMatch
+        let grid = app.scrollViews.matching(
+            NSPredicate(format: "identifier BEGINSWITH '\(StoogeA11y.Albums.Detail.photosGridPrefix)'")
+        ).firstMatch
         XCTAssertTrue(grid.waitForExistence(timeout: 10))
     }
 
     func testAlbumDetailShowsPhotos() {
         app.tabBars.buttons["Albums"].tap()
 
-        let list = app.collectionViews["albums-list"]
+        let list = app.collectionViews[StoogeA11y.Albums.list]
         XCTAssertTrue(list.waitForExistence(timeout: 15))
         list.cells.element(boundBy: 0).tap()
 
-        let firstPhoto = app.otherElements.matching(identifier: NSPredicate(format: "identifier BEGINSWITH 'photo-tile-'")).firstMatch
+        let firstPhoto = app.otherElements.matching(
+            NSPredicate(format: "identifier BEGINSWITH '\(StoogeA11y.Albums.Detail.photoTilePrefix)'")
+        ).firstMatch
         XCTAssertTrue(firstPhoto.waitForExistence(timeout: 15))
-    }
-}
-
-// MARK: - Helpers
-
-extension XCUIElementQuery {
-    func matching(identifier predicate: NSPredicate) -> XCUIElementQuery {
-        self.matching(predicate)
     }
 }

@@ -9,7 +9,7 @@ struct PostDetailView: View {
             switch viewModel.state {
             case .idle, .loading:
                 ProgressView("Loading…")
-                    .accessibilityIdentifier("post-detail-loading-indicator")
+                    .accessibilityIdentifier(StoogeA11y.Posts.Detail.loadingIndicator)
 
             case .failed:
                 ErrorView(message: viewModel.state.errorMessage ?? "Something went wrong") {
@@ -35,21 +35,21 @@ struct PostDetailView: View {
                 VStack(alignment: .leading, spacing: 12) {
                     Text(post.title.localizedCapitalized)
                         .font(.title2.bold())
-                        .accessibilityIdentifier("post-title")
+                        .accessibilityIdentifier(StoogeA11y.Posts.Detail.title)
 
                     if let author = viewModel.author {
                         NavigationLink(value: author) {
                             Label(author.name, systemImage: "person.circle.fill")
                                 .font(.subheadline)
                         }
-                        .accessibilityIdentifier("post-author-link")
+                        .accessibilityIdentifier(StoogeA11y.Posts.Detail.authorLink)
                     }
 
                     Divider()
 
                     Text(post.body)
                         .font(.body)
-                        .accessibilityIdentifier("post-body")
+                        .accessibilityIdentifier(StoogeA11y.Posts.Detail.body)
                 }
                 .padding()
 
@@ -59,7 +59,7 @@ struct PostDetailView: View {
                 }
             }
         }
-        .accessibilityIdentifier("post-detail-\(postId)")
+        .accessibilityIdentifier(StoogeA11y.Posts.Detail.container(postId))
         .navigationDestination(for: User.self) { user in
             UserDetailView(userId: user.id)
         }
@@ -77,11 +77,11 @@ struct PostDetailView: View {
                 CommentRowView(comment: comment)
                     .padding(.horizontal)
                     .padding(.vertical, 10)
-                    .accessibilityIdentifier("comment-row-\(comment.id)")
+                    .accessibilityIdentifier(StoogeA11y.Posts.Detail.commentRow(comment.id))
                 Divider().padding(.leading)
             }
         }
-        .accessibilityIdentifier("comments-list")
+        .accessibilityIdentifier(StoogeA11y.Posts.Detail.commentsList)
     }
 }
 

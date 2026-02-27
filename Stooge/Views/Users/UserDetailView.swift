@@ -9,7 +9,7 @@ struct UserDetailView: View {
             switch viewModel.state {
             case .idle, .loading:
                 ProgressView("Loading…")
-                    .accessibilityIdentifier("user-detail-loading-indicator")
+                    .accessibilityIdentifier(StoogeA11y.Users.Detail.loadingIndicator)
 
             case .failed:
                 ErrorView(message: viewModel.state.errorMessage ?? "Something went wrong") {
@@ -39,11 +39,11 @@ struct UserDetailView: View {
                         VStack(spacing: 2) {
                             Text(user.name)
                                 .font(.title2.bold())
-                                .accessibilityIdentifier("user-name")
+                                .accessibilityIdentifier(StoogeA11y.Users.Detail.name)
                             Text("@\(user.username)")
                                 .font(.subheadline)
                                 .foregroundStyle(.secondary)
-                                .accessibilityIdentifier("user-username")
+                                .accessibilityIdentifier(StoogeA11y.Users.Detail.username)
                         }
                     }
                     Spacer()
@@ -54,11 +54,11 @@ struct UserDetailView: View {
             // Contact
             Section("Contact") {
                 LabeledContent("Email", value: user.email)
-                    .accessibilityIdentifier("user-email")
+                    .accessibilityIdentifier(StoogeA11y.Users.Detail.email)
                 LabeledContent("Phone", value: user.phone)
-                    .accessibilityIdentifier("user-phone")
+                    .accessibilityIdentifier(StoogeA11y.Users.Detail.phone)
                 LabeledContent("Website", value: user.website)
-                    .accessibilityIdentifier("user-website")
+                    .accessibilityIdentifier(StoogeA11y.Users.Detail.website)
             }
 
             // Address
@@ -71,7 +71,7 @@ struct UserDetailView: View {
             // Company
             Section("Company") {
                 LabeledContent("Name", value: user.company.name)
-                    .accessibilityIdentifier("user-company-name")
+                    .accessibilityIdentifier(StoogeA11y.Users.Detail.companyName)
                 Text(user.company.catchPhrase)
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
@@ -86,13 +86,13 @@ struct UserDetailView: View {
                             Text(post.title.localizedCapitalized)
                                 .lineLimit(2)
                         }
-                        .accessibilityIdentifier("user-post-row-\(post.id)")
+                        .accessibilityIdentifier(StoogeA11y.Users.Detail.postRow(post.id))
                     }
                 }
-                .accessibilityIdentifier("user-posts-section")
+                .accessibilityIdentifier(StoogeA11y.Users.Detail.postsSection)
             }
         }
-        .accessibilityIdentifier("user-detail-\(userId)")
+        .accessibilityIdentifier(StoogeA11y.Users.Detail.container(userId))
         .navigationDestination(for: Post.self) { post in
             PostDetailView(postId: post.id)
         }

@@ -9,7 +9,7 @@ struct ContentView: View {
             .tabItem {
                 Label("Feed", systemImage: "newspaper")
             }
-            .accessibilityIdentifier("tab-feed")
+            .accessibilityIdentifier(StoogeA11y.TabBar.feed)
 
             NavigationStack {
                 UsersListView()
@@ -17,7 +17,7 @@ struct ContentView: View {
             .tabItem {
                 Label("People", systemImage: "person.2")
             }
-            .accessibilityIdentifier("tab-people")
+            .accessibilityIdentifier(StoogeA11y.TabBar.people)
 
             NavigationStack {
                 AlbumsListView()
@@ -25,8 +25,8 @@ struct ContentView: View {
             .tabItem {
                 Label("Albums", systemImage: "photo.stack")
             }
-            .accessibilityIdentifier("tab-albums")
+            .accessibilityIdentifier(StoogeA11y.TabBar.albums)
         }
-        .accessibilityIdentifier("main-tab-bar")
+        .accessibilityIdentifier(StoogeA11y.TabBar.root)
     }
 }

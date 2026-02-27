@@ -11,7 +11,7 @@ struct AlbumDetailView: View {
             switch viewModel.state {
             case .idle, .loading:
                 ProgressView("Loading photos…")
-                    .accessibilityIdentifier("album-detail-loading-indicator")
+                    .accessibilityIdentifier(StoogeA11y.Albums.Detail.loadingIndicator)
 
             case .failed:
                 ErrorView(message: viewModel.state.errorMessage ?? "Something went wrong") {
@@ -23,12 +23,12 @@ struct AlbumDetailView: View {
                     LazyVGrid(columns: columns, spacing: 8) {
                         ForEach(viewModel.photos) { photo in
                             PhotoTileView(photo: photo)
-                                .accessibilityIdentifier("photo-tile-\(photo.id)")
+                                .accessibilityIdentifier(StoogeA11y.Albums.Detail.photoTile(photo.id))
                         }
                     }
                     .padding()
                 }
-                .accessibilityIdentifier("album-photos-grid-\(albumId)")
+                .accessibilityIdentifier(StoogeA11y.Albums.Detail.photosGrid(albumId))
             }
         }
         .navigationTitle(viewModel.album?.title.localizedCapitalized ?? "Album")

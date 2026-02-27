@@ -8,22 +8,22 @@ struct AlbumsListView: View {
             switch viewModel.state {
             case .idle, .loading where viewModel.albums.isEmpty:
                 ProgressView("Loading albums…")
-                    .accessibilityIdentifier("albums-loading-indicator")
+                    .accessibilityIdentifier(StoogeA11y.Albums.loadingIndicator)
 
             case .failed:
                 ErrorView(message: viewModel.state.errorMessage ?? "Something went wrong") {
                     Task { await viewModel.load() }
                 }
-                .accessibilityIdentifier("albums-error-view")
+                .accessibilityIdentifier(StoogeA11y.Albums.errorView)
 
             default:
                 List(viewModel.albums) { album in
                     NavigationLink(value: album) {
                         AlbumRowView(album: album)
                     }
-                    .accessibilityIdentifier("album-row-\(album.id)")
+                    .accessibilityIdentifier(StoogeA11y.Albums.row(album.id))
                 }
-                .accessibilityIdentifier("albums-list")
+                .accessibilityIdentifier(StoogeA11y.Albums.list)
                 .navigationDestination(for: Album.self) { album in
                     AlbumDetailView(albumId: album.id)
                 }

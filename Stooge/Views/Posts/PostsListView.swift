@@ -8,22 +8,22 @@ struct PostsListView: View {
             switch viewModel.state {
             case .idle, .loading where viewModel.posts.isEmpty:
                 ProgressView("Loading posts…")
-                    .accessibilityIdentifier("posts-loading-indicator")
+                    .accessibilityIdentifier(StoogeA11y.Posts.loadingIndicator)
 
             case .failed:
                 ErrorView(message: viewModel.state.errorMessage ?? "Something went wrong") {
                     Task { await viewModel.load() }
                 }
-                .accessibilityIdentifier("posts-error-view")
+                .accessibilityIdentifier(StoogeA11y.Posts.errorView)
 
             default:
                 List(viewModel.posts) { post in
                     NavigationLink(value: post) {
                         PostRowView(post: post)
                     }
-                    .accessibilityIdentifier("post-row-\(post.id)")
+                    .accessibilityIdentifier(StoogeA11y.Posts.row(post.id))
                 }
-                .accessibilityIdentifier("posts-list")
+                .accessibilityIdentifier(StoogeA11y.Posts.list)
                 .navigationDestination(for: Post.self) { post in
                     PostDetailView(postId: post.id)
                 }

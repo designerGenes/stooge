@@ -12,7 +12,7 @@ struct ErrorView: View {
         } actions: {
             Button("Try Again", action: retry)
                 .buttonStyle(.borderedProminent)
-                .accessibilityIdentifier("error-retry-button")
+                .accessibilityIdentifier(StoogeA11y.Components.errorRetryButton)
         }
     }
 }
