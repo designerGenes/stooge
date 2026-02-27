@@ -47,16 +47,16 @@ final class ShadowStoogeTests: XCTestCase {
         XCTAssertTrue(app.navigationBars["People"].waitForExistence(timeout: 5))
     }
 
-    func testTabBar_navigateToAlbums() {
-        app.tabBars.buttons["Albums"].tap()
-        XCTAssertTrue(app.navigationBars["Albums"].waitForExistence(timeout: 5))
+    func testTabBar_navigateToBeneficiary() {
+        app.tabBars.buttons["Add Beneficiary"].tap()
+        XCTAssertTrue(app.navigationBars["Add Beneficiary"].waitForExistence(timeout: 5))
     }
 
     func testTabBar_cycleAllTabs() {
         app.tabBars.buttons["People"].tap()
         XCTAssertTrue(app.navigationBars["People"].waitForExistence(timeout: 5))
-        app.tabBars.buttons["Albums"].tap()
-        XCTAssertTrue(app.navigationBars["Albums"].waitForExistence(timeout: 5))
+        app.tabBars.buttons["Add Beneficiary"].tap()
+        XCTAssertTrue(app.navigationBars["Add Beneficiary"].waitForExistence(timeout: 5))
         app.tabBars.buttons["Feed"].tap()
         XCTAssertTrue(app.navigationBars["Feed"].waitForExistence(timeout: 5))
     }
@@ -210,45 +210,131 @@ final class ShadowStoogeTests: XCTestCase {
         XCTAssertTrue(app.navigationBars["People"].waitForExistence(timeout: 5))
     }
 
-    // MARK: - Albums List
+    // MARK: - Beneficiary Flow: Tab Entry
 
-    func testAlbumsList_loads() {
-        let list = albumsList()
-        XCTAssertGreaterThan(list.cells.count, 0)
+    func testBeneficiary_tabNavigatesToStep1() {
+        beneficiaryTab()
+        XCTAssertTrue(app.navigationBars["Add Beneficiary"].waitForExistence(timeout: 5))
     }
 
-    func testAlbumsList_firstRowHasContent() {
-        let firstCell = albumsList().cells.element(boundBy: 0)
-        XCTAssertTrue(firstCell.exists)
-        XCTAssertFalse(firstCell.label.isEmpty)
+    // MARK: - Beneficiary Flow: Step 1 — Personal Info
+
+    func testBeneficiaryStep1_firstNameFieldIsPresent() {
+        beneficiaryTab()
+        XCTAssertTrue(
+            app.textFields[StoogeA11y.Beneficiary.Step1.firstNameField].waitForExistence(timeout: 5)
+        )
     }
 
-    // MARK: - Album Detail
-
-    func testAlbumDetail_opensOnRowTap() {
-        albumsList().cells.element(boundBy: 0).tap()
-        let grid = app.scrollViews.matching(
-            beginsWith: StoogeA11y.Albums.Detail.photosGridPrefix
-        ).firstMatch
-        XCTAssertTrue(grid.waitForExistence(timeout: 10))
+    func testBeneficiaryStep1_lastNameFieldIsPresent() {
+        beneficiaryTab()
+        XCTAssertTrue(
+            app.textFields[StoogeA11y.Beneficiary.Step1.lastNameField].waitForExistence(timeout: 5)
+        )
     }
 
-    func testAlbumDetail_showsPhotoTiles() {
-        albumsList().cells.element(boundBy: 0).tap()
-        let firstTile = app.otherElements.matching(
-            beginsWith: StoogeA11y.Albums.Detail.photoTilePrefix
-        ).firstMatch
-        XCTAssertTrue(firstTile.waitForExistence(timeout: 15))
+    func testBeneficiaryStep1_dobPickerIsPresent() {
+        beneficiaryTab()
+        XCTAssertTrue(
+            app.datePickers[StoogeA11y.Beneficiary.Step1.dobPicker].waitForExistence(timeout: 5)
+        )
     }
 
-    func testAlbumDetail_backNavigationReturnsToAlbums() {
-        albumsList().cells.element(boundBy: 0).tap()
-        let grid = app.scrollViews.matching(
-            beginsWith: StoogeA11y.Albums.Detail.photosGridPrefix
-        ).firstMatch
-        XCTAssertTrue(grid.waitForExistence(timeout: 10))
-        app.navigationBars.buttons.firstMatch.tap()
-        XCTAssertTrue(app.navigationBars["Albums"].waitForExistence(timeout: 5))
+    func testBeneficiaryStep1_continueDisabledWhenEmpty() {
+        beneficiaryTab()
+        let btn = app.buttons[StoogeA11y.Beneficiary.Step1.continueButton]
+        XCTAssertTrue(btn.waitForExistence(timeout: 5))
+        XCTAssertFalse(btn.isEnabled)
+    }
+
+    func testBeneficiaryStep1_continueEnabledAfterNames() {
+        beneficiaryTab()
+        typeField(StoogeA11y.Beneficiary.Step1.firstNameField, text: "Jane")
+        typeField(StoogeA11y.Beneficiary.Step1.lastNameField, text: "Doe")
+        let btn = app.buttons[StoogeA11y.Beneficiary.Step1.continueButton]
+        XCTAssertTrue(btn.waitForExistence(timeout: 5))
+        XCTAssertTrue(btn.isEnabled)
+    }
+
+    func testBeneficiaryStep1_continueNavigatesToStep2() {
+        fillStep1AndContinue()
+        XCTAssertTrue(app.navigationBars["Coverage Details"].waitForExistence(timeout: 5))
+    }
+
+    // MARK: - Beneficiary Flow: Step 2 — Coverage Details
+
+    func testBeneficiaryStep2_allocationSliderIsPresent() {
+        fillStep1AndContinue()
+        XCTAssertTrue(
+            app.sliders[StoogeA11y.Beneficiary.Step2.allocationSlider].waitForExistence(timeout: 5)
+        )
+    }
+
+    func testBeneficiaryStep2_allocationValueLabelShowsPercent() {
+        fillStep1AndContinue()
+        let label = app.staticTexts[StoogeA11y.Beneficiary.Step2.allocationValueLabel]
+        XCTAssertTrue(label.waitForExistence(timeout: 5))
+        XCTAssertTrue(label.label.hasSuffix("%"),
+                      "Expected allocation label to end with '%', got: \(label.label)")
+    }
+
+    func testBeneficiaryStep2_phoneFieldIsPresent() {
+        fillStep1AndContinue()
+        XCTAssertTrue(
+            app.textFields[StoogeA11y.Beneficiary.Step2.phoneField].waitForExistence(timeout: 5)
+        )
+    }
+
+    func testBeneficiaryStep2_notesFieldIsPresent() {
+        fillStep1AndContinue()
+        XCTAssertTrue(
+            app.textFields[StoogeA11y.Beneficiary.Step2.notesField].waitForExistence(timeout: 5)
+        )
+    }
+
+    func testBeneficiaryStep2_submitNavigatesToConfirmation() {
+        fillStep1AndContinue()
+        app.buttons[StoogeA11y.Beneficiary.Step2.submitButton].tap()
+        XCTAssertTrue(app.navigationBars["Success"].waitForExistence(timeout: 5))
+    }
+
+    // MARK: - Beneficiary Flow: Confirmation
+
+    func testBeneficiaryConfirmation_showsNameLabel() {
+        fillAndSubmit()
+        let label = app.staticTexts[StoogeA11y.Beneficiary.Confirmation.nameLabel]
+        XCTAssertTrue(label.waitForExistence(timeout: 5))
+        XCTAssertTrue(label.label.contains("Jane"),
+                      "Expected confirmation name to contain 'Jane', got: \(label.label)")
+    }
+
+    func testBeneficiaryConfirmation_showsAllocationLabel() {
+        fillAndSubmit()
+        let label = app.staticTexts[StoogeA11y.Beneficiary.Confirmation.allocationLabel]
+        XCTAssertTrue(label.waitForExistence(timeout: 5))
+        XCTAssertTrue(label.label.contains("%"),
+                      "Expected allocation label to contain '%', got: \(label.label)")
+    }
+
+    func testBeneficiaryConfirmation_doneReturnsToStep1() {
+        fillAndSubmit()
+        app.buttons[StoogeA11y.Beneficiary.Confirmation.doneButton].tap()
+        XCTAssertTrue(app.navigationBars["Add Beneficiary"].waitForExistence(timeout: 5))
+    }
+
+    func testBeneficiaryConfirmation_addAnotherReturnsToStep1() {
+        fillAndSubmit()
+        app.buttons[StoogeA11y.Beneficiary.Confirmation.addAnotherButton].tap()
+        XCTAssertTrue(app.navigationBars["Add Beneficiary"].waitForExistence(timeout: 5))
+    }
+
+    func testBeneficiaryConfirmation_formIsResetAfterDone() {
+        fillAndSubmit()
+        app.buttons[StoogeA11y.Beneficiary.Confirmation.doneButton].tap()
+        XCTAssertTrue(app.navigationBars["Add Beneficiary"].waitForExistence(timeout: 5))
+        let firstNameField = app.textFields[StoogeA11y.Beneficiary.Step1.firstNameField]
+        XCTAssertTrue(firstNameField.waitForExistence(timeout: 5))
+        XCTAssertEqual(firstNameField.value as? String ?? "", "")
     }
 
     // MARK: - Cross-Screen Navigation
@@ -305,13 +391,13 @@ private extension ShadowStoogeTests {
         return list
     }
 
-    /// Navigate to Albums tab and wait for the albums list to appear.
+    /// Navigate to Add Beneficiary tab and wait for Step 1 to appear.
     @discardableResult
-    func albumsList() -> XCUIElement {
-        app.tabBars.buttons["Albums"].tap()
-        let list = app.collectionViews[StoogeA11y.Albums.list]
-        XCTAssertTrue(list.waitForExistence(timeout: 15), "Albums list did not appear")
-        return list
+    func beneficiaryTab() -> XCUIElement {
+        app.tabBars.buttons["Add Beneficiary"].tap()
+        let screen = app.navigationBars["Add Beneficiary"]
+        XCTAssertTrue(screen.waitForExistence(timeout: 5), "Beneficiary Step 1 did not appear")
+        return screen
     }
 
     /// Open the first post and wait for the detail navigation bar.
@@ -324,6 +410,34 @@ private extension ShadowStoogeTests {
     func openFirstUser() {
         usersList().cells.element(boundBy: 0).tap()
         XCTAssertTrue(app.navigationBars["Profile"].waitForExistence(timeout: 5))
+    }
+
+    /// Type text into a form TextField by accessibility identifier.
+    func typeField(_ identifier: String, text: String) {
+        let field = app.textFields[identifier]
+        XCTAssertTrue(field.waitForExistence(timeout: 5))
+        field.tap()
+        field.typeText(text)
+    }
+
+    /// Fill Step 1 with "Jane Doe" and tap Continue.
+    func fillStep1AndContinue() {
+        beneficiaryTab()
+        typeField(StoogeA11y.Beneficiary.Step1.firstNameField, text: "Jane")
+        typeField(StoogeA11y.Beneficiary.Step1.lastNameField, text: "Doe")
+        let continueBtn = app.buttons[StoogeA11y.Beneficiary.Step1.continueButton]
+        XCTAssertTrue(continueBtn.waitForExistence(timeout: 5))
+        continueBtn.tap()
+        XCTAssertTrue(app.navigationBars["Coverage Details"].waitForExistence(timeout: 5))
+    }
+
+    /// Fill Step 1, advance to Step 2, and tap Submit.
+    func fillAndSubmit() {
+        fillStep1AndContinue()
+        let submitBtn = app.buttons[StoogeA11y.Beneficiary.Step2.submitButton]
+        XCTAssertTrue(submitBtn.waitForExistence(timeout: 5))
+        submitBtn.tap()
+        XCTAssertTrue(app.navigationBars["Success"].waitForExistence(timeout: 5))
     }
 }
 

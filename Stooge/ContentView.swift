@@ -19,13 +19,11 @@ struct ContentView: View {
             }
             .accessibilityIdentifier(StoogeA11y.TabBar.people)
 
-            NavigationStack {
-                AlbumsListView()
-            }
+            BeneficiaryRootView()
             .tabItem {
-                Label("Albums", systemImage: "photo.stack")
+                Label("Add Beneficiary", systemImage: "person.badge.plus")
             }
-            .accessibilityIdentifier(StoogeA11y.TabBar.albums)
+            .accessibilityIdentifier(StoogeA11y.TabBar.beneficiary)
         }
         .accessibilityIdentifier(StoogeA11y.TabBar.root)
     }

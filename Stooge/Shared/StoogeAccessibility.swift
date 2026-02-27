@@ -7,10 +7,10 @@
 enum StoogeA11y {
 
     enum TabBar {
-        static let root   = "main-tab-bar"
-        static let feed   = "tab-feed"
-        static let people = "tab-people"
-        static let albums = "tab-albums"
+        static let root        = "main-tab-bar"
+        static let feed        = "tab-feed"
+        static let people      = "tab-people"
+        static let beneficiary = "tab-beneficiary"
     }
 
     enum Posts {
@@ -79,6 +79,36 @@ enum StoogeA11y {
 
             static let photoTilePrefix  = "photo-tile-"
             static func photoTile(_ id: Int) -> String { "\(photoTilePrefix)\(id)" }
+        }
+    }
+
+    enum Beneficiary {
+        static let flowRoot = "beneficiary-flow-root"
+
+        enum Step1 {
+            static let screen             = "beneficiary-step1-screen"
+            static let firstNameField     = "beneficiary-firstname-field"
+            static let lastNameField      = "beneficiary-lastname-field"
+            static let dobPicker          = "beneficiary-dob-picker"
+            static let relationshipPicker = "beneficiary-relationship-picker"
+            static let continueButton     = "beneficiary-continue-button"
+        }
+
+        enum Step2 {
+            static let screen               = "beneficiary-step2-screen"
+            static let allocationSlider     = "beneficiary-allocation-slider"
+            static let allocationValueLabel = "beneficiary-allocation-value-label"
+            static let phoneField           = "beneficiary-phone-field"
+            static let notesField           = "beneficiary-notes-field"
+            static let submitButton         = "beneficiary-submit-button"
+        }
+
+        enum Confirmation {
+            static let screen           = "beneficiary-confirmation-screen"
+            static let nameLabel        = "beneficiary-confirmation-name"
+            static let allocationLabel  = "beneficiary-confirmation-allocation"
+            static let doneButton       = "beneficiary-done-button"
+            static let addAnotherButton = "beneficiary-add-another-button"
         }
     }
 
